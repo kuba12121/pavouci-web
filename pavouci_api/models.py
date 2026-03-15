@@ -7,7 +7,7 @@ from pavouci_api.database import Base
 SCHEMA = "pavouci_db"
 
 # -----------------------------------------------------------------------------
-# 1. NEZÁVISLÉ TABULKY (Číselníky a základní entity)
+# 1. NEZÁVISLÉ TABULKY
 # -----------------------------------------------------------------------------
 
 class Celed(Base):
@@ -49,14 +49,15 @@ class Nalezy(Base):
     obrazek = Column(Text)
 
 # -----------------------------------------------------------------------------
-# 2. ZÁVISLÉ TABULKY (Odkazují na ty výše)
+# 2. ZÁVISLÉ TABULKY
 # -----------------------------------------------------------------------------
 
 class Pavouk(Base):
     __tablename__ = "pavouci"
     __table_args__ = {"schema": SCHEMA}
     
-    id_pavuk = Column('id_pavk', Integer, primary_key=True, index=True)
+    # Sjednocuji název atributu a sloupce na id_pavk pro konzistenci s cizími klíči
+    id_pavk = Column(Integer, primary_key=True, index=True)
     nazev = Column(String(100), nullable=False)
     lat_nazev = Column(String(150))
     popis = Column(Text)
@@ -66,9 +67,8 @@ class Pavouk(Base):
     foto_odkaz = Column(String(255), nullable=True)
     ohrozeni = Column('ohrozeni', String(100))
     
-    # Odkazy bez SCHEMA prefixu
     id_celed = Column(Integer, ForeignKey("celed.id_celed"))
-    id_pavuciny = Column('id_pavuc', Integer, ForeignKey("pavuciny.id_pavuc"))
+    id_pavuc = Column(Integer, ForeignKey("pavuciny.id_pavuc"))
 
 class Uzivatel(SQLAlchemyBaseUserTableUUID, Base):
     __tablename__ = "uzivatel"
@@ -81,13 +81,14 @@ class Uzivatel(SQLAlchemyBaseUserTableUUID, Base):
     is_superuser = Column(Boolean, default=False, server_default='false')
     is_verified = Column(Boolean, default=False, server_default='false')
 
-    id_uz = Column(Integer, index=True, autoincrement=True, nullable=True)
+    # KLÍČOVÁ OPRAVA: id_uz musí být UNIQUE, aby na něj mohly odkazovat cizí klíče
+    id_uz = Column(Integer, index=True, unique=True, autoincrement=True, nullable=True)
     jmeno = Column(String(50), unique=True, index=True, nullable=False)
     profilovka = Column(Text, nullable=True)
     id_kotvy = Column(Integer, ForeignKey("kotvy.id_kotvy"), nullable=True)
 
 # -----------------------------------------------------------------------------
-# 3. VAZEBNÍ TABULKY (Many-to-Many a vztahy)
+# 3. VAZEBNÍ TABULKY
 # -----------------------------------------------------------------------------
 
 class Pratele(Base):
