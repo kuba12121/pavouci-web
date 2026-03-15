@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encyklopedie pavouků</title>
+  <link rel="icon" type="image/webp" href="img/pavouk.webp">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#"><i class="fa-solid fa-spider"></i> Pavouci</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="fa-solid fa-bars" style="color: var(--primary-color);"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="#home" data-section="home">Domů</a></li>
+          <li class="nav-item"><a class="nav-link" href="#pavouci" data-section="pavouci">Pavouci</a></li>
+          <li class="nav-item"><a class="nav-link" href="#anatomie" data-section="anatomie">Anatomie</a></li>
+          <li class="nav-item"><a class="nav-link" href="#pavuciny" data-section="pavuciny">Pavučiny</a></li>
+          <li class="nav-item"><a class="nav-link" href="#nalezy-global" data-section="nalezy-global">Nálezy</a></li>
+          <li class="nav-item" id="profile-nav" style="display:none;"><a class="nav-link" href="#profile" data-section="profile"><i class="fa-solid fa-user-circle"></i> Profil</a></li>
+          <li class="nav-item" id="logout-nav" style="display:none;"><a class="nav-link text-danger" href="#" id="logout-btn"><i class="fa-solid fa-sign-out-alt"></i></a></li>
+          <li class="nav-item ms-lg-3" id="user-icon-nav"><a href="#login" data-section="login" class="user-btn"><i class="fa-solid fa-user"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-4 content">
+    <div id="tab-content">
+      <div id="home" class="section py-5" style="display:block;">
+        <div class="text-center mb-5">
+          <h1 class="hero-header">Objevte svět pavouků</h1>
+          <p class="lead text-muted mb-4">Vítejte v moderní encyklopedii věnované těmto fascinujícím tvorům.</p>
+          <button class="btn btn-primary btn-lg rounded-pill" onclick="showSection('pavouci')">Prozkoumat databázi</button>
+        </div>
+
+        <div class="row g-4 text-start mt-5">
+          <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--primary-color);">Odborný úvod do arachnologie</h3>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+              <h5 class="fw-bold"><i class="fa-solid fa-dna me-2 text-primary"></i>Biologie a život pavouků</h5>
+              <p class="text-muted small">
+                Pavouci (Araneae) představují nejpočetnější řád klepítkatců s více než 50 000 popsanými druhy. Jejich tělo se striktně dělí na dvě části: hlavohruď (prosoma) a zadeček (opisthosoma), spojené tenkou stopkou (pedicelem). Na rozdíl od hmyzu mají pavouci čtyři páry kráčivých nohou a postrádají tykadla.
+              </p>
+              <p class="text-muted small">
+                Většina druhů disponuje osmi jednoduchýma očima, jejichž uspořádání je klíčovým diagnostickým znakem pro určování čeledí. Jsou to výhradně predátoři, kteří hrají nezastupitelnou roli v regulaci populací hmyzu v ekosystémech.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+              <h5 class="fw-bold"><i class="fa-solid fa-venus-mars me-2 text-danger"></i>Sexuální dimorfismus</h5>
+              <p class="text-muted small">
+                Rozlišení pohlaví u dospělých jedinců je založeno na morfologických znacích. Samci jsou obvykle menší (u některých čeledí, např. křižákovitých, až extrémně) a mají delší končetiny v poměru k tělu.
+              </p>
+              <p class="text-muted small">
+                Nejspolehlivějším znakem jsou <strong>makadla (pedipalpy)</strong>. U dospělých samců jsou konce makadel nápadně zbytnělé a přeměněné v sekundární kopulační orgány (bulbusy), připomínající "boxerské rukavice". Samice mají makadla jednoduchá, nitkovitá. Dalším znakem je epigyna na spodní straně zadečku samic – vyztužená destička kryjící vývody pohlavních orgánů.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+              <h5 class="fw-bold"><i class="fa-solid fa-arrows-spin me-2 text-success"></i>Životní cyklus a vývoj</h5>
+              <div class="row">
+                <div class="col-lg-8">
+                  <p class="text-muted small">
+                    Vývoj pavouků je přímý (bez stadia larvy). Začíná vajíčkem uloženým v hedvábném kokonu, který samice často střeží nebo nosí s sebou. Po vylíhnutí procházejí nymfy několika svlékáními (ekdyzemi), při kterých odvrhují starý chitinový exoskeleton, aby mohly růst.
+                  </p>
+                  <p class="text-muted small">
+                    Délka života se výrazně liší: zatímco běžní křižáci žijí přibližně jeden rok, zástupci sklípkanů se mohou dožít až 20–30 let. Reprodukční proces je často doprovázen komplexními zásnubními tanci, které mají zabránit samici, aby samce považovala za kořist.
+                  </p>
+                </div>
+                <div class="col-lg-4 d-flex align-items-center justify-content-center">
+                  <div class="bg-success bg-opacity-10 p-3 rounded-4 text-center">
+                    <i class="fa-solid fa-microscope fa-3x text-success mb-2"></i>
+                    <p class="small fw-bold mb-0">Věděli jste, že?</p>
+                    <p id="random-fact" class="text-muted tiny" style="font-size: 0.75rem;">Načítám zajímavost...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pavouci" class="section" style="display:none;">
+        <div class="row mb-4 align-items-end g-3">
+          <div class="col-md-6">
+            <h2 class="fw-bold mb-0" style="color: var(--primary-color);">Databáze pavouků</h2>
+            <p class="text-muted small mb-0">Procházejte naši rozsáhlou databázi druhů (<span id="spider-count">0</span> nalezeno).</p>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group shadow-sm rounded-pill overflow-hidden border">
+              <span class="input-group-text bg-white border-0"><i class="fa-solid fa-search text-muted"></i></span>
+              <input type="text" id="spider-search-input" class="form-control border-0" placeholder="Hledat podle jména...">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <select id="spider-family-filter" class="form-select border shadow-sm rounded-pill">
+              <option value="all">Všechny čeledi</option>
+            </select>
+          </div>
+        </div>
+        <div id="pavouci-cards" class="row g-4"></div>
+        
+        <div id="load-more-container" class="text-center mt-5" style="display:none;">
+          <button id="load-more-btn" class="btn btn-outline-primary rounded-pill px-5">Načíst další pavouky</button>
+        </div>
+      </div>
+
+      <div id="anatomie" class="section" style="display:none;">
+        <h2 class="mb-4 fw-bold" style="color: var(--primary-color);">Anatomie pavouků</h2>
+        <div class="row g-4">
+          <div class="col-md-5">
+            <div id="spider-text" class="alert alert-success border-0 bg-opacity-10 shadow-sm mb-3">Klikněte pro zvýraznění.</div>
+            <div id="spider-buttons" class="d-flex flex-wrap gap-2"></div>
+          </div>
+          <div class="col-md-7">
+            <div id="spider-canvas-container" style="height: 500px; background: #eee; border-radius: 15px;">
+              <canvas id="spider-canvas" style="width:100%; height:100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pavuciny" class="section" style="display:none;">
+        <h2 class="mb-4 fw-bold" style="color: var(--primary-color);">Typy pavučin</h2>
+        <div id="webs-container" class="row g-4 mb-5">
+          <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">Načítám typy pavučin...</p>
+          </div>
+        </div>
+
+        <div class="row g-4 mt-5 pt-4 border-top">
+          <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--primary-color);">Fascinující svět pavoučího hedvábí</h3>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+              <h5 class="fw-bold"><i class="fa-solid fa-flask me-2 text-primary"></i>Složení a vlastnosti vlákna</h5>
+              <p class="text-muted small">
+                Pavučinovou vlnu tvoří bílkovina zvaná <strong>fibroin</strong>. Je to jeden z nejpevnějších přírodních materiálů na světě. Vlákno o tloušťce pouhých několika mikrometrů by teoreticky dokázalo zastavit letící letadlo, pokud by bylo dostatečně silné jako lano.
+              </p>
+              <p class="text-muted small">
+                Pavouci dokážou produkovat několik druhů vláken: od nelepivých "vodičů" tvořících kostru sítě, přes vysoce elastické spirály až po extrémně pevná vlákna pro jištění při pádu (tzv. záchranné lano).
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+              <h5 class="fw-bold"><i class="fa-solid fa-egg me-2 text-warning"></i>Kokon – ochrana nové generace</h5>
+              <p class="text-muted small">
+                Samice pavouků používají speciální typy vláken k vytvoření <strong>kokonů</strong> (vaječných pouzder). Tyto struktury jsou navrženy tak, aby chránily vajíčka před predátory, parazity a nepříznivými vlivy počasí (vlhkost, mráz).
+              </p>
+              <p class="text-muted small">
+                Někteří pavouci kokon upevňují do sítě, jiní ho schovávají v úkrytech pod kameny nebo kůrou, a někteří (jako slíďáci) ho nosí připevněný k snovacím bradavicím, dokud se nymfy nevylíhnou.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mt-2">
+              <h5 class="fw-bold"><i class="fa-solid fa-gears me-2 text-success"></i>Multifunkční využití</h5>
+              <div class="row">
+                <div class="col-lg-8">
+                  <p class="text-muted small">
+                    Pavučina neslouží jen k lovu. Pavouci ji využívají k mnoha dalším účelům:
+                  </p>
+                  <ul class="text-muted small">
+                    <li><strong>Signalizace:</strong> Vlákna přenášejí vibrace, které pavoukovi sdělují polohu kořisti nebo přítomnost partnera.</li>
+                    <li><strong>Ballooning:</strong> Mladí pavouci vypouštějí dlouhé vlákno, které zachytí vítr a umožní jim "odletět" na nové lokality (tzv. babí léto).</li>
+                    <li><strong>Úkryt a obydlí:</strong> Mnoho druhů si buduje pavučinové obytné rourky nebo vaky, ve kterých odpočívají a tráví kořist.</li>
+                    <li><strong>Spermatická síťka:</strong> Samci si před pářením pletou malou síťku, na kterou ukládají kapku spermatu před jejím nasátím do makadel.</li>
+                  </ul>
+                </div>
+                <div class="col-lg-4 d-flex align-items-center justify-content-center">
+                  <div class="bg-primary bg-opacity-10 p-4 rounded-circle">
+                    <i class="fa-solid fa-circle-nodes fa-4x text-primary"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="nalezy-global" class="section" style="display:none;">
+        <h2 class="mb-4 fw-bold" style="color: var(--primary-color);">Nálezy uživatelů</h2>
+        <div id="global-findings-container" class="row g-4">
+          <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">Načítám nejnovější nálezy...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="kontakt" class="section" style="display:none;">
+        <h2 class="mb-4 fw-bold text-center">Kontaktujte nás</h2>
+        <div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 600px;">
+          <form id="contact-form">
+            <div class="mb-3">
+              <label class="form-label">Vaše jméno</label>
+              <input type="text" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">E-mail</label>
+              <input type="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Zpráva</label>
+              <textarea class="form-control" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Odeslat zprávu</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="profile" class="section" style="display:none;">
+        <h2 class="mb-4 fw-bold">Váš profil</h2>
+        <div class="row">
+          <div class="col-md-4 text-center">
+            <div class="position-relative d-inline-block mb-3">
+              <img id="profile-pic" src="img/pavouk.webp" class="rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover; border: 5px solid white;">
+              <button class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle" onclick="document.getElementById('profile-pic-input').click()">
+                <i class="fa-solid fa-camera"></i>
+              </button>
+              <input type="file" id="profile-pic-input" style="display:none" accept="image/*">
+            </div>
+            <h4 id="profile-username">Načítání...</h4>
+            <p id="profile-email" class="text-muted"></p>
+          </div>
+          <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Moje nálezy</h5>
+                <button class="btn btn-sm btn-success rounded-pill" onclick="document.getElementById('add-finding-form-container').style.display='block'">
+                  <i class="fa-solid fa-plus me-1"></i> Sdílet nález
+                </button>
+              </div>
+              
+              <div id="add-finding-form-container" class="mb-4 bg-light p-3 rounded-4" style="display:none;">
+                <form id="add-finding-form">
+                  <div class="row g-2">
+                    <div class="col-md-6"><input type="text" class="form-control" id="finding-name" placeholder="Jméno pavouka" required></div>
+                    <div class="col-md-6"><input type="text" class="form-control" id="finding-location" placeholder="Místo nálezu" required></div>
+                    <div class="col-12"><textarea class="form-control" id="finding-popis" placeholder="Popis..."></textarea></div>
+                    <div class="col-12"><input type="file" class="form-control" id="finding-image" accept="image/*"></div>
+                    <div class="col-12 d-flex gap-2">
+                      <button type="submit" class="btn btn-primary flex-grow-1">Uložit nález</button>
+                      <button type="button" class="btn btn-light" onclick="document.getElementById('add-finding-form-container').style.display='none'">Zrušit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div id="user-findings-list" class="row g-2">
+                <p class="text-muted text-center py-2">Načítám nálezy...</p>
+              </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Oblíbení pavouci (<span id="fav-count">0</span>)</h5>
+              </div>
+              <div id="profile-favorites" class="row g-3">
+                <p class="text-muted text-center py-2">Zatím žádní oblíbenci.</p>
+              </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
+              <h5>Přátelé</h5>
+              <hr>
+              <div class="input-group mb-3">
+                <input type="text" id="friend-search-input" class="form-control" placeholder="Hledat uživatele (jméno nebo email)...">
+                <button class="btn btn-outline-primary" id="friend-search-btn"><i class="fa-solid fa-search"></i></button>
+              </div>
+              <div id="friend-search-results" class="mb-3 list-group shadow-sm" style="display:none;"></div>
+              
+              <div id="pending-requests-section" style="display:none;" class="mb-4">
+                <div class="alert alert-info border-0 shadow-sm rounded-4">
+                  <h6 class="fw-bold mb-3"><i class="fa-solid fa-user-plus me-2"></i>Nové žádosti o přátelství</h6>
+                  <div id="pending-requests-list" class="list-group list-group-flush"></div>
+                </div>
+              </div>
+
+              <h6 class="fw-bold mb-3">Seznam přátel</h6>
+              <div id="friends-list" class="list-group list-group-flush">
+                <p class="text-muted small">Zatím žádní přátelé.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="friend-profile" class="section" style="display:none;">
+        <div class="d-flex align-items-center mb-4">
+          <button class="btn btn-outline-secondary rounded-pill me-3" onclick="showSection('profile')">
+            <i class="fa-solid fa-arrow-left"></i> Zpět
+          </button>
+          <h2 class="mb-0 fw-bold">Profil uživatele</h2>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-4 text-center">
+            <div class="position-relative d-inline-block mb-3">
+              <img id="f-profile-pic" src="img/pavouk.webp" class="rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover; border: 5px solid white;">
+            </div>
+            <h4 id="f-profile-username">...</h4>
+            <p id="f-profile-email" class="text-muted"></p>
+          </div>
+          <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
+              <h5>Nálezy uživatele</h5>
+              <hr>
+              <div id="f-user-findings-list" class="row g-2">
+                <p class="text-muted text-center py-2">Načítám nálezy...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="login" class="section" style="display:none; max-width: 450px; margin: 0 auto;">
+        <div id="login-container">
+          <h2 class="text-center mb-4">Přihlášení</h2>
+          <form id="login-form">
+            <input type="email" class="form-control mb-3" id="login-email" placeholder="E-mail" required>
+            <input type="password" class="form-control mb-3" id="login-password" placeholder="Heslo" required>
+            <button type="submit" class="btn btn-primary w-100 mb-2">Přihlásit se</button>
+            <button type="button" id="google-login-btn" class="btn btn-outline-danger w-100 mb-3"><i class="fa-brands fa-google me-2"></i>Google</button>
+            <p class="text-center small text-muted">Nemáte účet? <a href="#" onclick="toggleAuthForms(true)">Zaregistrujte se</a></p>
+          </form>
+        </div>
+
+        <div id="register-container" style="display:none;">
+          <h2 class="text-center mb-4">Registrace</h2>
+          <form id="register-form">
+            <input type="text" class="form-control mb-3" id="register-username" placeholder="Uživatelské jméno" required>
+            <input type="email" class="form-control mb-3" id="register-email" placeholder="E-mail" required>
+            <input type="password" class="form-control mb-3" id="register-password" placeholder="Heslo" required>
+            <button type="submit" class="btn btn-success w-100 mb-3">Vytvořit účet</button>
+            <p class="text-center small text-muted">Již máte účet? <a href="#" onclick="toggleAuthForms(false)">Přihlaste se</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pro detaily pavouka -->
+  <div class="modal fade" id="spiderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 overflow-hidden">
+        <div class="modal-header border-0 pb-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-4">
+            <div class="col-md-5">
+              <div class="position-relative">
+                <img id="modal-spider-img" src="" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; height: 350px;" alt="Spider">
+                <div id="modal-spider-author" class="photo-author small" style="display:none;"></div>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <h2 id="modal-spider-name" class="fw-bold mb-1"></h2>
+              <p id="modal-spider-latin" class="text-muted fst-italic mb-3"></p>
+              
+              <div class="d-flex flex-wrap gap-2 mb-4">
+                <span id="modal-spider-family" class="badge bg-success bg-opacity-10 text-success rounded-pill px-3"></span>
+                <span id="modal-spider-web" class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3"></span>
+                <span id="modal-spider-threat" class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3"></span>
+              </div>
+
+              <div id="modal-spider-location-container" class="mb-4" style="display:none;">
+                <h6 class="fw-bold text-primary"><i class="fa-solid fa-location-dot me-2"></i>Výskyt</h6>
+                <p id="modal-spider-location" class="text-muted small mb-0"></p>
+              </div>
+
+              <h5>Popis</h5>
+              <p id="modal-spider-description" class="text-muted mb-0" style="text-align: justify;"></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Zavřít</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer mt-5 py-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-spider me-2"></i>Encyklopedie pavouků</h5>
+          <p class="small text-muted">Vzdělávací platforma věnovaná studiu a pozorování pavouků v jejich přirozeném prostředí. Přidejte se k naší komunitě a sdílejte své nálezy.</p>
+        </div>
+        <div class="col-md-2 offset-md-1">
+          <h6 class="fw-bold mb-3">Rychlé odkazy</h6>
+          <ul class="list-unstyled small">
+            <li><a href="#" onclick="showSection('home')" class="text-decoration-none text-muted">Domů</a></li>
+            <li><a href="#" onclick="showSection('pavouci')" class="text-decoration-none text-muted">Databáze</a></li>
+            <li><a href="#" onclick="showSection('anatomie')" class="text-decoration-none text-muted">Anatomie</a></li>
+            <li><a href="#" onclick="showSection('nalezy-global')" class="text-decoration-none text-muted">Nálezy</a></li>
+          </ul>
+          <h6 class="fw-bold mb-2 mt-4">Kontakt</h6>
+          <p class="small text-muted mb-0"><i class="fa-solid fa-envelope me-2"></i> pavouciweb@gmail.com</p>
+        </div>
+        <div class="col-md-4 offset-md-1">
+          <h6 class="fw-bold mb-3">Odborné zdroje</h6>
+          <ul class="list-unstyled small text-muted">
+            <li class="mb-2"><i class="fa-solid fa-book-open me-2"></i> <a href="https://www.biolib.cz" target="_blank" class="text-decoration-none text-muted">BioLib.cz - Mapování bioty</a></li>
+            <li class="mb-2"><i class="fa-solid fa-microscope me-2"></i> <a href="https://www.arachnology.cz" target="_blank" class="text-decoration-none text-muted">Česká arachnologická společnost</a></li>
+            <li class="mb-2"><i class="fa-solid fa-database me-2"></i> <a href="https://wsc.nmbe.ch" target="_blank" class="text-decoration-none text-muted">World Spider Catalog</a></li>
+            <li class="mt-3">
+              <span class="badge bg-success bg-opacity-10 text-success p-2 rounded-3">
+                <i class="fa-solid fa-shield-halved me-1"></i> Ověřená data
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4 opacity-10">
+      <div class="text-center small text-muted">
+        &copy; 2026 Encyklopedie pavouků. Všechna práva vyhrazena.
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- NEJDŮLEŽITĚJŠÍ: Přímé CDN linky pro Three.js a Loader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/controls/OrbitControls.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
