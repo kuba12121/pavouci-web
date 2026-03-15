@@ -1021,7 +1021,12 @@ window.addEventListener('resize', resizeSpider3D);
           col.className = 'col-md-4 mb-4';
           
           const t = new Date().getTime();
-          const hasImage = w.obrazek && w.obrazek !== 'null' && w.obrazek !== '' && !w.obrazek.includes('undefined');
+          const hasImage = w.obrazek && 
+                           w.obrazek !== 'null' && 
+                           w.obrazek !== '' && 
+                           w.obrazek !== 'none.webp' && 
+                           !w.obrazek.includes('undefined');
+          
           let img = hasImage ? (w.obrazek.startsWith('http') ? w.obrazek : `${API_URL}/pavouci/image/${w.obrazek}?t=${t}`) : null;
           
           let finalUrl = w.foto_odkaz;
