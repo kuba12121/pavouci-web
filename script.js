@@ -249,7 +249,13 @@ window.addEventListener('resize', resizeSpider3D);
         const picEl = document.getElementById('profile-pic');
         if (emailEl) emailEl.textContent = data.email;
         if (userEl) userEl.textContent = data.username || 'Uživatel';
-        if (picEl) picEl.src = data.profilovka || 'img/none.webp';
+        if (picEl) picEl.src = data.profilovka || '';
+        
+        // ZOBRAZENÍ ADMIN SEKCE
+        const adminBadge = document.getElementById('admin-badge');
+        if (adminBadge) {
+          adminBadge.style.display = data.is_superuser ? 'block' : 'none';
+        }
 
         const token = localStorage.getItem('access_token');
         if (token) {

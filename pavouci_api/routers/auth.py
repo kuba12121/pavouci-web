@@ -334,7 +334,8 @@ def get_user_profile(email: str, db: Session = Depends(get_db)):
         "email": user.email,
         "profilovka": user.profilovka,
         "id": user.id_uz,
-        "id_uz": user.id_uz
+        "id_uz": user.id_uz,
+        "is_superuser": getattr(user, "is_superuser", False)
     }
 
 
