@@ -249,7 +249,7 @@ window.addEventListener('resize', resizeSpider3D);
         const picEl = document.getElementById('profile-pic');
         if (emailEl) emailEl.textContent = data.email;
         if (userEl) userEl.textContent = data.username || 'Uživatel';
-        if (picEl) picEl.src = data.profilovka || 'img/pavouk.webp';
+        if (picEl) picEl.src = data.profilovka || 'img/none.webp';
 
         const token = localStorage.getItem('access_token');
         if (token) {
@@ -412,7 +412,7 @@ window.addEventListener('resize', resizeSpider3D);
     document.getElementById('modal-spider-name').textContent = n.nazev;
     document.getElementById('modal-spider-family').textContent = n.lokace;
     document.getElementById('modal-spider-description').textContent = n.popis || 'Bez popisu.';
-    document.getElementById('modal-spider-img').src = n.obrazek || 'img/pavouk.webp';
+    document.getElementById('modal-spider-img').src = n.obrazek || 'img/none.webp';
     document.getElementById('modal-spider-latin').textContent = n.datum ? `Nalezeno: ${n.datum}` : '';
     modal.show();
   }
@@ -548,7 +548,7 @@ window.addEventListener('resize', resizeSpider3D);
       
       document.getElementById('f-profile-username').textContent = data.username;
       document.getElementById('f-profile-email').textContent = data.email;
-      document.getElementById('f-profile-pic').src = data.profilovka || 'img/pavouk.webp';
+      document.getElementById('f-profile-pic').src = data.profilovka || 'img/none.webp';
       
       showSection('friend-profile');
       
@@ -864,7 +864,7 @@ window.addEventListener('resize', resizeSpider3D);
 
     document.getElementById('modal-spider-description').textContent = p.popis;
     const t = new Date().getTime();
-    document.getElementById('modal-spider-img').src = p.obrazek ? (p.obrazek.startsWith('http') ? p.obrazek : `${API_URL}/pavouci/image/${p.obrazek}?t=${t}`) : 'img/pavouk.webp';
+    document.getElementById('modal-spider-img').src = p.obrazek ? (p.obrazek.startsWith('http') ? p.obrazek : `${API_URL}/pavouci/image/${p.obrazek}?t=${t}`) : 'img/none.webp';
     
     const authorEl = document.getElementById('modal-spider-author');
     if (p.autor) {
