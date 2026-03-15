@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Databáze
+  db:
+    image: postgres:15-alpine
+    container_name: pavouci_db_container
+    restart: always
+    environment:
+      POSTGRES_USER: pavouci_user
+      POSTGRES_PASSWORD: tajne_heslo_pro_docker
+      POSTGRES_DB: pavouci
+    ports:
+      - "5433:5432" # Mapujeme na jiný port, aby se to nebilo s případným lokálním PG
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # FastAPI Webová aplikace
+  web:
+    build: .
+    container_name: pavouci_web_container
+    restart: always
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://pavouci_user:tajne_heslo_pro_docker@db:5432/pavouci
+      - SECRET_KEY=nahodny_klic_pro_vyvoj
+      - ALGORITHM=HS256
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
