@@ -284,8 +284,9 @@ def resend_verification(payload: dict = Body(...), db: Session = Depends(get_db)
     from datetime import timedelta, datetime
     token_payload = {"sub": str(user.id_uz), "action": "verify_email", "exp": datetime.utcnow() + timedelta(hours=24)}
     token = jwt.encode(token_payload, SECRET_KEY, algorithm=ALGORITHM)
-    # Odkaz vede na backend API endpoint
-    verify_link = f"http://127.0.0.1:8000/auth/verify?{urlencode({'token': token})}"
+    
+    # Dynamický odkaz podle aktuální adresy (Request)
+    verify_link = f"{request.base_url}auth/verify?{urlencode({'token': token})}"
 
     email_body = f"Ahoj {user.jmeno},\n\nKlikni na tento odkaz pro ověření e-mailu:\n{verify_link}\n\nPlatnost odkazu: 24 hodin.\n"
     send_verification_email(user.email, "Ověření e-mailu - Pavouci", email_body)
