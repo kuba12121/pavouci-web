@@ -2,8 +2,9 @@
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from sqladmin import Admin
+from fastapi.responses import FileResponse, RedirectResponse
+from sqladmin import Admin, authentication
+from sqlalchemy.orm import Session
 import os
 import sys
 from pathlib import Path
@@ -11,10 +12,40 @@ from pathlib import Path
 # Přidání cesty pro správné importy
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from pavouci_api.database import Base, engine
-from pavouci_api.settings import GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI
+from pavouci_api.database import Base, engine, SessionLocal
+from pavouci_api.settings import GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, SECRET_KEY
 from pavouci_api.routers import pavouci, auth, kotvy, pratele, nalezy
+from pavouci_api.models import Uzivatel
 from pavouci_api.admin.views import UzivatelAdmin, PavoukAdmin, CeledAdmin, PavucinaAdmin, NalezyAdmin
+
+# --- Authentication for Admin ---
+class AdminAuth(authentication.AuthenticationBackend):
+    async def login(self, request: Request) -> bool:
+        form = await request.form()
+        email, password = form.get("username"), form.get("password")
+        
+        db = SessionLocal()
+        user = db.query(Uzivatel).filter(Uzivatel.email == email).first()
+        
+        # Ověření hesla (používáme stejný context jako v auth.py)
+        from pavouci_api.routers.auth import pwd_context
+        if user and user.is_superuser and pwd_context.verify(password, user.hashed_password):
+            request.session.update({"token": email})
+            db.close()
+            return True
+        
+        db.close()
+        return False
+
+    async def logout(self, request: Request) -> bool:
+        request.session.clear()
+        return True
+
+    async def authenticate(self, request: Request) -> bool:
+        return "token" in request.session
+
+authentication_backend = AdminAuth(secret_key=SECRET_KEY)
+# --------------------------------
 
 root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 img_path = os.path.join(root_path, "img")
@@ -23,8 +54,8 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Pavouci API")
 
-# Setup Admin Panel
-admin = Admin(app, engine, base_url="/admin")
+# Setup Admin Panel WITH Authentication
+admin = Admin(app, engine, base_url="/admin", authentication_backend=authentication_backend)
 admin.add_view(UzivatelAdmin)
 admin.add_view(PavoukAdmin)
 admin.add_view(CeledAdmin)
@@ -43,7 +74,6 @@ app.add_middleware(
 async def read_index():
     return FileResponse(os.path.join(root_path, "main.html"))
 
-# Privacy Policy endpoint
 @app.get("/podminky")
 async def read_podminky():
     return FileResponse(os.path.join(root_path, "podminky.html"))
