@@ -18,14 +18,19 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Pavouci API")
 
-# CORS setup - Opraveno pro produkci
+# CORS setup - Robustní pro produkci
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=False, # Změněno na False, protože origins jsou "*"
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# HLAVNÍ STRÁNKA (Musí být dříve než mount, aby obsloužila root)
+@app.get("/")
+async def read_index():
+    return FileResponse(os.path.join(root_path, "main.html"))
 
 # Favicon fix
 @app.get("/favicon.ico", include_in_schema=False)
@@ -42,9 +47,12 @@ app.include_router(pratele.router)
 app.include_router(nalezy.router)
 app.include_router(kotvy.router)
 
-# Image serving
+# SERVOVÁNÍ OBRÁZKŮ - Sjednocení cest pro HTML i API
 if os.path.exists(img_path):
-    app.mount("/images_dir", StaticFiles(directory=img_path), name="images_dir")
+    # Pro HTML <img src="img/...">
+    app.mount("/img", StaticFiles(directory=img_path), name="img")
+    # Pro API /images/...
+    app.mount("/images", StaticFiles(directory=img_path), name="images")
 
 @app.get("/images/{filename}")
 def serve_image(filename: str):
@@ -54,15 +62,9 @@ def serve_image(filename: str):
         raise HTTPException(status_code=404, detail="Image not found")
     return FileResponse(file_path)
 
-# HLAVNÍ STRÁNKA (Frontend)
-@app.get("/")
-async def read_index():
-    return FileResponse(os.path.join(root_path, "main.html"))
-
-# Automatické servírování ostatních souborů (styles.css, script.js, atd.)
+# Automatické servírování ostatních souborů v rootu (styles.css, script.js, atd.)
 @app.get("/{filename}")
 async def get_static_file(filename: str):
-    # Ochrana před přístupem k citlivým souborům
     if filename in [".env", "render.yaml", "requirements.txt", "export_dat.sql", "dump_data.py"] or filename.endswith(".py"):
         raise HTTPException(status_code=403)
         
