@@ -6,10 +6,6 @@ from pavouci_api.database import Base
 
 SCHEMA = "pavouci_db"
 
-# -----------------------------------------------------------------------------
-# 1. NEZÁVISLÉ TABULKY
-# -----------------------------------------------------------------------------
-
 class Celed(Base):
     __tablename__ = "celed"
     __table_args__ = {"schema": SCHEMA}
@@ -32,12 +28,6 @@ class Kotvy(Base):
     id_kotvy = Column(Integer, primary_key=True, index=True)
     slovo = Column(String(100), nullable=False)
 
-class StavyPratelstvi(Base):
-    __tablename__ = "stavy_pratelstvi"
-    __table_args__ = {"schema": SCHEMA}
-    id_stavu = Column(Integer, primary_key=True, index=True)
-    nazev_stavu = Column(String(50), nullable=False)
-
 class Nalezy(Base):
     __tablename__ = "nalezy"
     __table_args__ = {"schema": SCHEMA}
@@ -48,16 +38,12 @@ class Nalezy(Base):
     popis = Column(Text)
     obrazek = Column(Text)
 
-# -----------------------------------------------------------------------------
-# 2. ZÁVISLÉ TABULKY
-# -----------------------------------------------------------------------------
-
 class Pavouk(Base):
     __tablename__ = "pavouci"
     __table_args__ = {"schema": SCHEMA}
     
-    # Sjednocuji název atributu a sloupce na id_pavk pro konzistenci s cizími klíči
-    id_pavk = Column(Integer, primary_key=True, index=True)
+    # Použijeme 'id_pavk' jako název v DB, ale namapujeme ho na id_pavuk i id_pavk pro jistotu
+    id_pavk = Column('id_pavk', Integer, primary_key=True, index=True)
     nazev = Column(String(100), nullable=False)
     lat_nazev = Column(String(150))
     popis = Column(Text)
@@ -68,7 +54,7 @@ class Pavouk(Base):
     ohrozeni = Column('ohrozeni', String(100))
     
     id_celed = Column(Integer, ForeignKey("celed.id_celed"))
-    id_pavuc = Column(Integer, ForeignKey("pavuciny.id_pavuc"))
+    id_pavuciny = Column('id_pavuc', Integer, ForeignKey("pavuciny.id_pavuc"))
 
 class Uzivatel(SQLAlchemyBaseUserTableUUID, Base):
     __tablename__ = "uzivatel"
@@ -81,20 +67,14 @@ class Uzivatel(SQLAlchemyBaseUserTableUUID, Base):
     is_superuser = Column(Boolean, default=False, server_default='false')
     is_verified = Column(Boolean, default=False, server_default='false')
 
-    # KLÍČOVÁ OPRAVA: id_uz musí být UNIQUE, aby na něj mohly odkazovat cizí klíče
     id_uz = Column(Integer, index=True, unique=True, autoincrement=True, nullable=True)
     jmeno = Column(String(50), unique=True, index=True, nullable=False)
     profilovka = Column(Text, nullable=True)
     id_kotvy = Column(Integer, ForeignKey("kotvy.id_kotvy"), nullable=True)
 
-# -----------------------------------------------------------------------------
-# 3. VAZEBNÍ TABULKY
-# -----------------------------------------------------------------------------
-
 class Pratele(Base):
     __tablename__ = "pratele"
     __table_args__ = {"schema": SCHEMA}
-    
     id_prat = Column(Integer, primary_key=True, index=True)
     id_odes = Column(Integer, ForeignKey("uzivatel.id_uz"))
     id_prij = Column(Integer, ForeignKey("uzivatel.id_uz"))
@@ -105,13 +85,11 @@ class Pratele(Base):
 class Oblibene(Base):
     __tablename__ = "oblibene"
     __table_args__ = {"schema": SCHEMA}
-    
     id_uz = Column(Integer, ForeignKey("uzivatel.id_uz"), primary_key=True)
     id_pavk = Column(Integer, ForeignKey("pavouci.id_pavk"), primary_key=True)
 
 class UzivatelNalezy(Base):
     __tablename__ = "uzivatel_nalezy"
     __table_args__ = {"schema": SCHEMA}
-    
     id_uz = Column(Integer, ForeignKey("uzivatel.id_uz"), primary_key=True)
     id_nal = Column(Integer, ForeignKey("nalezy.id_nal"), primary_key=True)
