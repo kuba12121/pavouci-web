@@ -49,9 +49,7 @@ def list_pavouci(limit: int = 12, offset: int = 0, search: str = None, family_id
         for p in rows:
             img = os.path.basename(p.obrazek) if p.obrazek else "none.webp"
             
-            # Získání čeledi
             family = db.query(Celed).filter(Celed.id_celed == p.id_celed).first()
-            # Získání pavučiny (zkusíme id_pavuciny i id_pavuc)
             web_id = getattr(p, 'id_pavuciny', None) or getattr(p, 'id_pavuc', None)
             web = db.query(Pavucina).filter(Pavucina.id_pavuc == web_id).first() if web_id else None
             
@@ -82,9 +80,7 @@ async def toggle_favorite(pavouk_id: int, request: Request, db: Session = Depend
         if not user or user.id_uz is None:
             raise HTTPException(status_code=401, detail="Unauthorized")
 
-        # Robustní hledání v oblíbených
         fav = db.query(Oblibene).filter(Oblibene.id_uz == user.id_uz, Oblibene.id_pavk == pavouk_id).first()
-        
         if fav:
             db.delete(fav)
             db.commit()
@@ -96,7 +92,6 @@ async def toggle_favorite(pavouk_id: int, request: Request, db: Session = Depend
             return {"msg": "added"}
     except Exception as e:
         db.rollback()
-        print(f"FAV ERROR: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post('/favorites')
@@ -122,8 +117,8 @@ def get_image(filename: str):
     img_dir = Path(__file__).resolve().parents[2] / "img"
     file_path = img_dir / filename
     
-    # Fallback pro chybějící obrázky (např. tangle.webp)
+    # POKUD NEEXISTUJE, VRÁTÍME 404 (žádný none.webp fallback tady nebude)
     if not file_path.exists():
-        file_path = img_dir / "none.webp"
+        raise HTTPException(status_code=404, detail="Image not found")
     
     return FileResponse(str(file_path))

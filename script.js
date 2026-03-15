@@ -1024,7 +1024,6 @@ window.addEventListener('resize', resizeSpider3D);
           const hasImage = w.obrazek && 
                            w.obrazek !== 'null' && 
                            w.obrazek !== '' && 
-                           w.obrazek !== 'none.webp' && 
                            !w.obrazek.includes('undefined');
           
           let img = hasImage ? (w.obrazek.startsWith('http') ? w.obrazek : `${API_URL}/pavouci/image/${w.obrazek}?t=${t}`) : null;
