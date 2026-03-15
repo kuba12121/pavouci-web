@@ -392,7 +392,6 @@ window.addEventListener('resize', resizeSpider3D);
   }
 
   function renderFindingCard(n) {
-    const isSuperuser = document.getElementById('admin-badge').style.display === 'block';
     const col = document.createElement('div');
     col.className = 'col-md-6 col-lg-4';
     col.innerHTML = `
@@ -401,12 +400,9 @@ window.addEventListener('resize', resizeSpider3D);
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start mb-2">
             <h5 class="fw-bold mb-0">${n.nazev}</h5>
-            <div class="d-flex gap-1 align-items-center">
-              <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill small" style="font-size: 0.7rem;">
-                <i class="fa-solid fa-user me-1"></i>${n.author_name || 'Neznámý'}
-              </span>
-              ${isSuperuser ? `<button class="btn btn-sm text-danger p-0 ms-1" title="Smazat (Admin)" onclick="deleteFinding(${n.id}, event)"><i class="fa-solid fa-trash-can"></i></button>` : ''}
-            </div>
+            <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill small" style="font-size: 0.7rem;">
+              <i class="fa-solid fa-user me-1"></i>${n.author_name || 'Neznámý'}
+            </span>
           </div>
           <p class="small text-primary mb-1"><i class="fa-solid fa-location-dot me-1"></i>${n.lokace}</p>
           <p class="small text-muted text-truncate">${n.popis || ''}</p>
@@ -415,42 +411,6 @@ window.addEventListener('resize', resizeSpider3D);
     `;
     col.onclick = () => showFindingDetails(n);
     return col;
-  }
-
-  // --- ADMIN: PŘIDÁNÍ PAVOUKA ---
-  const spiderForm = document.getElementById('add-spider-form');
-  if (spiderForm) {
-    spiderForm.onsubmit = async (e) => {
-      e.preventDefault();
-      const token = localStorage.getItem('access_token');
-      const payload = {
-        token: token,
-        nazev: document.getElementById('sp-nazev').value,
-        lat_nazev: document.getElementById('sp-lat').value,
-        id_celed: parseInt(document.getElementById('sp-celed').value),
-        id_pavuciny: parseInt(document.getElementById('sp-pavucina').value),
-        vyskyt: document.getElementById('sp-vyskyt').value,
-        ohrozeni: document.getElementById('sp-ohrozeni').value,
-        popis: document.getElementById('sp-popis').value
-      };
-
-      try {
-        const res = await fetch(`${API_URL}/pavouci/add`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-          alert('Pavouk byl úspěšně přidán do databáze!');
-          spiderForm.reset();
-          document.getElementById('add-spider-form-container').style.display = 'none';
-          if (typeof fetchAndRenderPavouci === 'function') fetchAndRenderPavouci();
-        } else {
-          const err = await res.json();
-          alert('Chyba: ' + (err.detail || 'Nepodařilo se přidat pavouka.'));
-        }
-      } catch (e) { alert('Chyba při komunikaci se serverem.'); }
-    };
   }
 
   function showFindingDetails(n) {
