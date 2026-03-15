@@ -780,7 +780,8 @@ window.addEventListener('resize', resizeSpider3D);
     col.className = 'col-md-4 mb-4';
     const isFav = favIds.includes(p.id);
     const t = new Date().getTime();
-    let img = p.obrazek ? (p.obrazek.startsWith('http') ? p.obrazek : `${API_URL}/pavouci/image/${p.obrazek}?t=${t}`) : 'img/KrizakObecny.webp';
+    let img = p.obrazek && p.obrazek !== "none.webp" ? (p.obrazek.startsWith('http') ? p.obrazek : `${API_URL}/pavouci/image/${p.obrazek}?t=${t}`) : 'img/none.webp';
+
     
     const threatClasses = getThreatBadgeClasses(p.ohrozeni);
 

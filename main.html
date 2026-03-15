@@ -236,7 +236,7 @@
         <div class="row">
           <div class="col-md-4 text-center">
             <div class="position-relative d-inline-block mb-3">
-              <img id="profile-pic" src="img/none.webp" class="rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover; border: 5px solid white;">
+              <img id="profile-pic" src="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=random'" class="rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover; border: 5px solid white;">
               <button class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle" onclick="document.getElementById('profile-pic-input').click()">
                 <i class="fa-solid fa-camera"></i>
               </button>
@@ -319,7 +319,7 @@
         <div class="row">
           <div class="col-md-4 text-center">
             <div class="position-relative d-inline-block mb-3">
-              <img id="f-profile-pic" src="img/none.webp" class="rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover; border: 5px solid white;">
+              <img id="f-profile-pic" src="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=random'" class="rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover; border: 5px solid white;">
             </div>
             <h4 id="f-profile-username">...</h4>
             <p id="f-profile-email" class="text-muted"></p>
@@ -418,6 +418,7 @@
             <li><a href="#" onclick="showSection('pavouci')" class="text-decoration-none text-muted">Databáze</a></li>
             <li><a href="#" onclick="showSection('anatomie')" class="text-decoration-none text-muted">Anatomie</a></li>
             <li><a href="#" onclick="showSection('nalezy-global')" class="text-decoration-none text-muted">Nálezy</a></li>
+            <li><a href="/podminky" class="text-decoration-none text-muted">Ochrana údajů (GDPR)</a></li>
           </ul>
           <h6 class="fw-bold mb-2 mt-4">Kontakt</h6>
           <p class="small text-muted mb-0"><i class="fa-solid fa-envelope me-2"></i> pavouciweb@gmail.com</p>
