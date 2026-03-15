@@ -42,10 +42,28 @@ app.include_router(pratele.router)
 app.include_router(nalezy.router)
 app.include_router(kotvy.router)
 
+# Root path for frontend
+root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 # Image serving
-img_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "img")
+img_path = os.path.join(root_path, "img")
 if os.path.exists(img_path):
     app.mount("/images", StaticFiles(directory=img_path), name="images")
+
+# Serve frontend static files
+app.mount("/static", StaticFiles(directory=root_path), name="static")
+
+@app.get("/")
+async def read_index():
+    return FileResponse(os.path.join(root_path, "main.html"))
+
+# Pro ostatní soubory v rootu (styles.css, script.js, atd.)
+@app.get("/{filename}")
+async def get_static_file(filename: str):
+    file_path = os.path.join(root_path, filename)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return FileResponse(file_path)
+    raise HTTPException(status_code=404)
 
 @app.get("/images/{filename}")
 def serve_image(filename: str):

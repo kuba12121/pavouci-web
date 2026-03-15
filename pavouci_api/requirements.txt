@@ -4,3 +4,9 @@ sqlalchemy
 psycopg2-binary
 python-dotenv
 sqladmin
+pyjwt
+requests
+passlib
+python-multipart
+python-jose[cryptography]
+email-validator
