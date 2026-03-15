@@ -24,12 +24,10 @@ def get_user_from_token(token: str, db: Session):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         sub = payload.get('sub')
         if not sub: return None
+        # Zkusíme najít podle emailu nebo jména
+        user = db.query(Uzivatel).filter((Uzivatel.email == sub) | (Uzivatel.jmeno == sub)).first()
+        return user
     except: return None
-
-    user = db.query(Uzivatel).filter(Uzivatel.email == sub).first()
-    if not user:
-        user = db.query(Uzivatel).filter(Uzivatel.jmeno == sub).first()
-    return user
 
 @router.get("/")
 def list_pavouci(limit: int = 12, offset: int = 0, search: str = None, family_id: int = None, db: Session = Depends(get_db)):
@@ -48,7 +46,6 @@ def list_pavouci(limit: int = 12, offset: int = 0, search: str = None, family_id
         result = []
         for p in rows:
             img = os.path.basename(p.obrazek) if p.obrazek else "none.webp"
-            
             family = db.query(Celed).filter(Celed.id_celed == p.id_celed).first()
             web_id = getattr(p, 'id_pavuciny', None) or getattr(p, 'id_pavuc', None)
             web = db.query(Pavucina).filter(Pavucina.id_pavuc == web_id).first() if web_id else None
@@ -68,40 +65,61 @@ def list_pavouci(limit: int = 12, offset: int = 0, search: str = None, family_id
             })
         return {"spiders": result, "total": total}
     except Exception as e:
-        print(f"LIST ERROR: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/{pavouk_id}/favorite")
-async def toggle_favorite(pavouk_id: int, request: Request, db: Session = Depends(get_db)):
+@router.post("/add")
+async def add_spider(request: Request, db: Session = Depends(get_db)):
+    """Admin function to add a new spider."""
+    body = await request.json()
+    token = body.get('token')
+    user = get_user_from_token(token, db)
+    
+    if not user or not getattr(user, 'is_superuser', False):
+        raise HTTPException(status_code=403, detail="Pouze administrátor může přidávat pavouky")
+    
     try:
-        body = await request.json()
-        token = body.get('token')
-        user = get_user_from_token(token, db)
-        if not user or user.id_uz is None:
-            raise HTTPException(status_code=401, detail="Unauthorized")
-
-        fav = db.query(Oblibene).filter(Oblibene.id_uz == user.id_uz, Oblibene.id_pavk == pavouk_id).first()
-        if fav:
-            db.delete(fav)
-            db.commit()
-            return {"msg": "removed"}
-        else:
-            new_fav = Oblibene(id_uz=user.id_uz, id_pavk=pavouk_id)
-            db.add(new_fav)
-            db.commit()
-            return {"msg": "added"}
+        new_spider = Pavouk(
+            nazev=body.get('nazev'),
+            lat_nazev=body.get('lat_nazev'),
+            popis=body.get('popis'),
+            vyskyt=body.get('vyskyt'),
+            ohrozeni=body.get('ohrozeni'),
+            id_celed=body.get('id_celed'),
+            id_pavuc=body.get('id_pavuciny'),
+            obrazek='none.webp' # Pro zjednodušení, admin si obrázek pak nahraje na server
+        )
+        db.add(new_spider)
+        db.commit()
+        return {"msg": "Pavouk přidán", "id": new_spider.id_pavk}
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post("/{pavouk_id}/favorite")
+async def toggle_favorite(pavouk_id: int, request: Request, db: Session = Depends(get_db)):
+    body = await request.json()
+    token = body.get('token')
+    user = get_user_from_token(token, db)
+    if not user or user.id_uz is None:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    fav = db.query(Oblibene).filter(Oblibene.id_uz == user.id_uz, Oblibene.id_pavk == pavouk_id).first()
+    if fav:
+        db.delete(fav)
+        db.commit()
+        return {"msg": "removed"}
+    else:
+        new_fav = Oblibene(id_uz=user.id_uz, id_pavk=pavouk_id)
+        db.add(new_fav)
+        db.commit()
+        return {"msg": "added"}
+
 @router.post('/favorites')
 async def list_favorites(request: Request, db: Session = Depends(get_db)):
-    try:
-        body = await request.json()
-        user = get_user_from_token(body.get('token'), db)
-        if not user or user.id_uz is None: return []
-        return [r.id_pavk for r in db.query(Oblibene).filter(Oblibene.id_uz == user.id_uz).all()]
-    except: return []
+    body = await request.json()
+    user = get_user_from_token(body.get('token'), db)
+    if not user or user.id_uz is None: return []
+    return [r.id_pavk for r in db.query(Oblibene).filter(Oblibene.id_uz == user.id_uz).all()]
 
 @router.get("/families")
 def list_families(db: Session = Depends(get_db)):
@@ -116,9 +134,6 @@ def get_image(filename: str):
     filename = filename.split('/')[-1].split('\\')[-1]
     img_dir = Path(__file__).resolve().parents[2] / "img"
     file_path = img_dir / filename
-    
-    # POKUD NEEXISTUJE, VRÁTÍME 404 (žádný none.webp fallback tady nebude)
     if not file_path.exists():
-        raise HTTPException(status_code=404, detail="Image not found")
-    
+        raise HTTPException(status_code=404)
     return FileResponse(str(file_path))

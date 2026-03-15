@@ -246,8 +246,51 @@
             <p id="profile-email" class="text-muted"></p>
             <div id="admin-badge" style="display:none;" class="mb-3">
               <span class="badge bg-danger rounded-pill"><i class="fa-solid fa-shield-halved me-1"></i> Administrátor</span>
-              <br>
-              <a href="/admin/" target="_self" class="btn btn-sm btn-outline-danger mt-2 rounded-pill">Vstoupit do administrace</a>
+              <div class="mt-3">
+                <button class="btn btn-sm btn-danger rounded-pill px-3" onclick="document.getElementById('add-spider-form-container').style.display='block'">
+                  <i class="fa-solid fa-plus me-1"></i> Přidat nového pavouka
+                </button>
+              </div>
+            </div>
+
+            <div id="add-spider-form-container" class="mt-4 bg-light p-4 rounded-4 shadow-sm text-start" style="display:none;">
+              <h5 class="fw-bold mb-3">Nový pavouk do databáze</h5>
+              <form id="add-spider-form">
+                <div class="row g-2">
+                  <div class="col-md-6 mb-2">
+                    <label class="small text-muted">Název</label>
+                    <input type="text" id="sp-nazev" class="form-control" placeholder="Např. Křižák obecný" required>
+                  </div>
+                  <div class="col-md-6 mb-2">
+                    <label class="small text-muted">Latinský název</label>
+                    <input type="text" id="sp-lat" class="form-control" placeholder="Araneus diadematus">
+                  </div>
+                  <div class="col-md-6 mb-2">
+                    <label class="small text-muted">Čeleď (ID)</label>
+                    <input type="number" id="sp-celed" class="form-control" value="1" required>
+                  </div>
+                  <div class="col-md-6 mb-2">
+                    <label class="small text-muted">Typ pavučiny (ID)</label>
+                    <input type="number" id="sp-pavucina" class="form-control" value="1" required>
+                  </div>
+                  <div class="col-12 mb-2">
+                    <label class="small text-muted">Výskyt</label>
+                    <input type="text" id="sp-vyskyt" class="form-control" placeholder="Lesy, zahrady...">
+                  </div>
+                  <div class="col-12 mb-2">
+                    <label class="small text-muted">Ohrožení</label>
+                    <input type="text" id="sp-ohrozeni" class="form-control" placeholder="LC, VU...">
+                  </div>
+                  <div class="col-12 mb-3">
+                    <label class="small text-muted">Popis</label>
+                    <textarea id="sp-popis" class="form-control" rows="3"></textarea>
+                  </div>
+                  <div class="col-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-danger flex-grow-1">Uložit do databáze</button>
+                    <button type="button" class="btn btn-light px-4" onclick="document.getElementById('add-spider-form-container').style.display='none'">Zrušit</button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
           <div class="col-md-8">
