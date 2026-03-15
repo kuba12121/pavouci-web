@@ -1,5 +1,5 @@
 # main.py
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -18,7 +18,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Pavouci API")
 
-# CORS setup - Robustní pro produkci
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# HLAVNÍ STRÁNKA (Musí být dříve než mount, aby obsloužila root)
+# Root path for frontend
 @app.get("/")
 async def read_index():
     return FileResponse(os.path.join(root_path, "main.html"))
@@ -47,11 +47,9 @@ app.include_router(pratele.router)
 app.include_router(nalezy.router)
 app.include_router(kotvy.router)
 
-# SERVOVÁNÍ OBRÁZKŮ - Sjednocení cest pro HTML i API
+# SERVOVÁNÍ OBRÁZKŮ
 if os.path.exists(img_path):
-    # Pro HTML <img src="img/...">
     app.mount("/img", StaticFiles(directory=img_path), name="img")
-    # Pro API /images/...
     app.mount("/images", StaticFiles(directory=img_path), name="images")
 
 @app.get("/images/{filename}")
@@ -62,17 +60,17 @@ def serve_image(filename: str):
         raise HTTPException(status_code=404, detail="Image not found")
     return FileResponse(file_path)
 
-# Automatické servírování ostatních souborů v rootu (styles.css, script.js, atd.)
+# Statické soubory v rootu (styles.css, script.js, glb atd.)
 @app.get("/{filename}")
 async def get_static_file(filename: str):
-    if filename in [".env", "render.yaml", "requirements.txt", "export_dat.sql", "dump_data.py"] or filename.endswith(".py"):
+    if filename in [".env", "render.yaml", "requirements.txt", "export_dat.sql"] or filename.endswith(".py"):
         raise HTTPException(status_code=403)
         
     file_path = os.path.join(root_path, filename)
     if os.path.exists(file_path) and os.path.isfile(file_path):
         return FileResponse(file_path)
     
-    # Pro vše ostatní vrátíme main.html (SPA routing)
+    # Pokud jde o neznámý soubor, zkusíme vrátit hlavní stránku (SPA fallback)
     return FileResponse(os.path.join(root_path, "main.html"))
 
 if __name__ == "__main__":

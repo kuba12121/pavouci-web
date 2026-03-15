@@ -172,33 +172,27 @@ def register(user: UserCreate = Body(...), db: Session = Depends(get_db)):
             jmeno=user.username, 
             hashed_password=hashed_password, 
             email=user.email,
-            is_verified=False,
+            is_verified=True,  # NASTAVENO NA TRUE PRO PRODUKCI
             is_active=True
         )
         db.add(user_obj)
         db.commit()
         db.refresh(user_obj)
 
-        # vytvoř token pro ověření e-mailu
+        # vytvoř token pro ověření (pro jistotu, i když už je ověřen)
         token_payload = {"sub": str(user_obj.id_uz), "action": "verify_email"}
         token_payload["exp"] = datetime.utcnow() + timedelta(hours=24)
         token = jwt.encode(token_payload, SECRET_KEY, algorithm=ALGORITHM)
 
-        # Odkaz vede na backend API endpoint na portu 8001
-        verify_link = f"http://127.0.0.1:8001/auth/verify?{urlencode({'token': token})}"
-        email_body = f"Ahoj {user_obj.jmeno},\n\nKlikni na tento odkaz pro ověření e-mailu:\n{verify_link}\n\nPlatnost odkazu: 24 hodin.\n"
-
         # Odeslání emailu nesmí shodit registraci
         try:
-            send_verification_email(user_obj.email, "Ověření e-mailu - Pavouci", email_body)
+            verify_link = f"{request.base_url}auth/verify?{urlencode({'token': token})}"
+            email_body = f"Ahoj {user_obj.jmeno},\n\nVítej! Tvůj účet byl automaticky ověřen.\n"
+            send_verification_email(user_obj.email, "Vítejte v Pavoucích", email_body)
         except Exception as e:
-            print(f"Email sending failed: {e}")
+            print(f"Email sending failed (ignored for UX): {e}")
 
-        response = {"msg": "Uživatel vytvořen", "username": user_obj.jmeno, "email": user_obj.email}
-        # Vždy vrať odkaz v odpovědi pro snadné testování bez funkčního SMTP
-        response["verification_link"] = verify_link
-
-        return response
+        return {"msg": "Uživatel vytvořen a ověřen", "username": user_obj.jmeno, "email": user_obj.email}
     except Exception as e:
         import traceback
         error_trace = traceback.format_exc()
