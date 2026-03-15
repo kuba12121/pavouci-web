@@ -264,8 +264,10 @@ window.addEventListener('resize', resizeSpider3D);
             if (countEl) countEl.textContent = favIds.length;
             const resAll = await fetch(`${API_URL}/pavouci/`);
             if (resAll.ok) {
-              const all = await resAll.json();
+              const dataAll = await resAll.json();
+              const all = dataAll.spiders || []; // Zde byla chyba, API vrací objekt
               const myFavs = all.filter(s => favIds.includes(s.id));
+
               const container = document.getElementById('profile-favorites');
               if (container) {
                 container.innerHTML = myFavs.length ? '' : '<p class="text-muted">Žádní oblíbenci.</p>';
