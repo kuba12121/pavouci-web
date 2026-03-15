@@ -426,6 +426,10 @@ window.addEventListener('resize', resizeSpider3D);
       if (res.ok) {
         const email = localStorage.getItem('email');
         if (email) loadUserFindings(email);
+        // Také aktualizujeme globální seznam, pokud je uživatel právě v něm
+        if (typeof fetchGlobalFindings === 'function') {
+            fetchGlobalFindings();
+        }
       } else {
         alert('Chyba při odstraňování nálezu.');
       }
